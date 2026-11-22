@@ -1,0 +1,168 @@
+
+    /* ---------- CSS: look ---------- */
+
+    /* Color variables: change them here and the whole page changes */
+    :root {
+      --bg: #0b0e14;
+      --surface: #131722;
+      --border: #232836;
+      --text: #d1d4dc;
+      --text-muted: #787b86;
+      --accent: #2962ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    /* Top bar: title on the left, link and buttons on the right,
+       tabs on a second line (flex-wrap lets them drop down) */
+    header {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+      padding: 14px 24px 0;
+      background: rgba(11, 14, 20, 0.92);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--border);
+    }
+    header h1 { margin: 0; font-size: 30px; font-weight: 700; }
+    #clock { color: var(--text-muted); font-size: 13px; margin-left: 12px; }
+
+    .periods { display: flex; gap: 8px; }
+    .periods button {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .periods button:hover { border-color: var(--text-muted); }
+    .periods button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    .calendar-link {
+      margin-left: auto;          /* pushes the link to the right, next to the buttons */
+      color: var(--text);
+      text-decoration: none;      /* removes the underline links have by default */
+      font-size: 16px;
+      padding: 8px 16px;;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    .calendar-link:hover { border-color: var(--text-muted); }
+
+    /* NEW: the tab bar. width: 100% forces it onto its own line */
+    .tabs { display: flex; gap: 4px; width: 100%; }
+    .tabs button {
+      background: none;
+      color: var(--text-muted);
+      border: none;
+      border-bottom: 2px solid transparent;  /* invisible line, same height as the active one */
+      padding: 10px 14px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .tabs button:hover { color: var(--text); }
+    .tabs button.active { color: var(--text); border-bottom-color: var(--accent); }
+
+    main { padding: 8px 24px 32px; }
+
+    /* Each group (Macro, Commodities...) has a title and a grid */
+    section h2 {
+      margin: 22px 0 10px;
+      font-size: 22px; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text);
+    }
+
+    /* THE GRID: as many columns as fit, each at least 700px wide */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(700px, 1fr));
+      gap: 12px;
+    }
+
+    /* Each chart box */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 10px 4px;
+      height: 400px;
+      display: flex; flex-direction: column;
+    }
+    .card .label { font-size: 12px; color: var(--text-muted); margin: 0 0 4px 4px; }
+
+    .card .chart { flex: 1; min-height: 0; }
+     /* Number cards (data from APIs, not charts) */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));   /* all cards the same width */
+      gap: 12px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .stat-card .label { font-size: 13px; color: var(--text-muted); }
+    .stat-value { 
+      font-size: 36px; 
+      font-weight: 700; 
+      margin: 6px 0 2px; 
+      white-space: nowrap;   /* never break the number into two lines */
+    }
+    
+    .stat-date { font-size: 12px; color: var(--text-muted); }
+    .stat-unit { font-size: 20px; font-weight: 500; color: var(--text-muted); margin-left: 4px; }
+    
+    /* Performance lists on the Global tab */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+      gap: 12px;
+    }
+    .overview-card { height: 500px; }    
+    
+    .group-link {
+      display: inline-block;
+      margin: 0 0 12px;
+      font-size: 15px;
+      color: var(--text);
+      text-decoration: none;
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--surface);
+    }
+
+    /* Country comparison table */
+    .table-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      overflow-x: auto;   /* scroll sideways on small screens instead of breaking */
+    }
+    .compare { width: 100%; border-collapse: collapse; font-size: 16px; }
+    .compare th, .compare td {
+      padding: 10px 14px;
+      text-align: right;   /* numbers line up on the right, like in a spreadsheet */
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .compare th:first-child { text-align: left; }   /* country names on the left */
+    .compare thead th { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+    .compare tbody tr:hover { background: var(--border); }   /* highlight the row under the mouse */
+    .compare td[title] { cursor: help; }
+
+    .group-link:hover { border-color: var(--text-muted); }
+    .group-link:hover { text-decoration: underline; }
