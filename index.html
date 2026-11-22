@@ -29,20 +29,20 @@
 
     /* Color variables: change them here and the whole page changes */
     :root {
-      --fundo: #0b0e14;
-      --caixa: #131722;
-      --borda: #232836;
-      --texto: #d1d4dc;
+      --bg: #0b0e14;
+      --surface: #131722;
+      --border: #232836;
+      --text: #d1d4dc;
       --text-muted: #787b86;
-      --destaque: #2962ff;
+      --accent: #2962ff;
     }
 
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      background: var(--fundo);
-      color: var(--texto);
+      background: var(--bg);
+      color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
@@ -55,31 +55,31 @@
       padding: 14px 24px 0;
       background: rgba(11, 14, 20, 0.92);
       backdrop-filter: blur(6px);
-      border-bottom: 1px solid var(--borda);
+      border-bottom: 1px solid var(--border);
     }
     header h1 { margin: 0; font-size: 30px; font-weight: 700; }
     #clock { color: var(--text-muted); font-size: 13px; margin-left: 12px; }
 
     .periods { display: flex; gap: 8px; }
     .periods button {
-      background: var(--caixa);
-      color: var(--texto);
-      border: 1px solid var(--borda);
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
       border-radius: 6px;
       padding: 8px 16px;
       font-size: 16px;
       cursor: pointer;
     }
     .periods button:hover { border-color: var(--text-muted); }
-    .periods button.active { background: var(--destaque); border-color: var(--destaque); color: #fff; }
+    .periods button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
     .calendar-link {
       margin-left: auto;          /* pushes the link to the right, next to the buttons */
-      color: var(--texto);
+      color: var(--text);
       text-decoration: none;      /* removes the underline links have by default */
       font-size: 16px;
       padding: 8px 16px;;
-      border: 1px solid var(--borda);
+      border: 1px solid var(--border);
       border-radius: 6px;
     }
     .calendar-link:hover { border-color: var(--text-muted); }
@@ -95,8 +95,8 @@
       font-size: 20px;
       cursor: pointer;
     }
-    .tabs button:hover { color: var(--texto); }
-    .tabs button.active { color: var(--texto); border-bottom-color: var(--destaque); }
+    .tabs button:hover { color: var(--text); }
+    .tabs button.active { color: var(--text); border-bottom-color: var(--accent); }
 
     main { padding: 8px 24px 32px; }
 
@@ -105,7 +105,7 @@
       margin: 22px 0 10px;
       font-size: 22px; font-weight: 600;
       letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--texto);
+      color: var(--text);
     }
 
     /* THE GRID: as many columns as fit, each at least 700px wide */
@@ -117,8 +117,8 @@
 
     /* Each chart box */
     .card {
-      background: var(--caixa);
-      border: 1px solid var(--borda);
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 10px;
       padding: 10px 10px 4px;
       height: 400px;
@@ -134,8 +134,8 @@
       gap: 12px;
     }
     .stat-card {
-      background: var(--caixa);
-      border: 1px solid var(--borda);
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 10px;
       padding: 14px 16px;
     }
@@ -162,18 +162,18 @@
       display: inline-block;
       margin: 0 0 12px;
       font-size: 15px;
-      color: var(--texto);
+      color: var(--text);
       text-decoration: none;
       padding: 8px 14px;
-      border: 1px solid var(--borda);
+      border: 1px solid var(--border);
       border-radius: 6px;
-      background: var(--caixa);
+      background: var(--surface);
     }
 
     /* Country comparison table */
     .table-card {
-      background: var(--caixa);
-      border: 1px solid var(--borda);
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 10px;
       padding: 14px 16px;
       overflow-x: auto;   /* scroll sideways on small screens instead of breaking */
@@ -182,12 +182,12 @@
     .compare th, .compare td {
       padding: 10px 14px;
       text-align: right;   /* numbers line up on the right, like in a spreadsheet */
-      border-bottom: 1px solid var(--borda);
+      border-bottom: 1px solid var(--border);
       white-space: nowrap;
     }
     .compare th:first-child { text-align: left; }   /* country names on the left */
     .compare thead th { font-size: 13px; font-weight: 600; color: var(--text-muted); }
-    .compare tbody tr:hover { background: var(--borda); }   /* highlight the row under the mouse */
+    .compare tbody tr:hover { background: var(--border); }   /* highlight the row under the mouse */
     .compare td[title] { cursor: help; }
 
     .group-link:hover { border-color: var(--text-muted); }
@@ -294,8 +294,8 @@
       { tab: "United States", title: "Rates & Inflation",
         link: ["Rate Expectations: CME FedWatch ↗", "https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html"],
         indicators: [
-          ["US_FED_FUNDS", "Fed Funds Effective Rate",                    "% p.y."],
-          ["US_REAL_RATE", "Real Interest Rate (Fed Funds vs. CPI 12m)", "% p.y."],
+          ["US_FED_FUNDS", "Fed Funds Effective Rate",                    "%"],
+          ["US_REAL_RATE", "Real Interest Rate (Fed Funds vs. CPI 12m)", "%"],
           ["US_CPI",       "CPI Inflation (12 months)",                  "%"],
       ]},
       { tab: "United States", title: "Economy & Fiscal", indicators: [
@@ -320,8 +320,8 @@
       { tab: "Europe", title: "Euro Area (ECB)",
         link: ["ECB Monetary Policy Decisions ↗", "https://www.ecb.europa.eu/press/govcdec/mopo/html/index.en.html"],
         indicators: [
-          ["EU_DEPOSIT_RATE", "ECB Deposit Facility Rate",           "% p.y."],
-          ["EU_REAL_RATE",    "Real Short-Term Rate (vs. HICP 12m)", "% p.y."],
+          ["EU_DEPOSIT_RATE", "ECB Deposit Facility Rate",           "%"],
+          ["EU_REAL_RATE",    "Real Short-Term Rate (vs. HICP 12m)", "%"],
           ["EU_HICP",         "HICP Inflation (12 months)",          "%"],
           ["EU_GDP_GROWTH",   "Real GDP Growth (YoY)",               "%"],
       ]},
@@ -376,8 +376,8 @@
       { tab: "Brazil", title: "Rates & Inflation",
         link: ["Focus Survey: Latest Report (PDF) ↗", latestFocusUrl()],
         indicators: [
-        [432,   "Selic Target Rate",          "% p.y."],
-        ["REAL_RATE", "Real Interest Rate (Selic vs. IPCA 12m)", "% p.y."],
+        [432,   "Selic Target Rate",          "%"],
+        ["REAL_RATE", "Real Interest Rate (Selic vs. IPCA 12m)", "%"],
         [13522, "IPCA Inflation (12 months)", "%"],
         [433,   "IPCA Inflation (monthly)",   "%"],
         [13521, "Inflation Target",           "%"],
