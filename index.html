@@ -467,10 +467,6 @@
     const DEFAULT_TAB = TABS[0];
     const DEFAULT_PERIOD = "1M"; // 1 day, 1 month, 3 months, 1 year, 5 years
 
-    // Address of TradingView's "little program" that draws each chart
-    const WIDGET_URL =
-      "https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js";
-
 
     // 2) MEMORY: save and read choices in the browser (localStorage),
     // so the page reopens on the same tab and period.
@@ -491,11 +487,12 @@
     // If a saved tab no longer exists (e.g. you renamed it), go back to the default
     if (!TABS.includes(currentTab)) currentTab = DEFAULT_TAB;
 
+    // 3) TRADINGVIEW WIDGETS
+    // Every TradingView widget is built the same way: a container, a target div
+    // and a <script> with the settings as JSON. Only the widget type and the settings change.
+    const TV_BASE_URL = "https://s3.tradingview.com/external-embedding/embed-widget-";
 
-    // 3) FUNCTION THAT CREATES ONE CHART inside a box
-    // This is TradingView's own "embed" code, built with JavaScript
-    // so we can rebuild it when you change tab or period.
-    function createChart(box, symbol, period) {
+    function createWidget(box, type, settings) {
       const container = document.createElement("div");
       container.className = "tradingview-widget-container";
       container.style.height = "100%";
@@ -505,83 +502,52 @@
       container.appendChild(target);
 
       const script = document.createElement("script");
-      script.src = WIDGET_URL;
+      script.src = TV_BASE_URL + type + ".js";   // e.g. ".../embed-widget-symbol-overview.js"
       script.async = true;
-      // The settings go inside the <script> tag as JSON
+      // Settings shared by all our widgets, then the ones specific to this widget
       script.innerHTML = JSON.stringify({
-        symbols: [[symbol + "|" + period]], // "EXCHANGE:TICKER|PERIOD"
-        chartOnly: false,
-        width: "100%",
-        height: "100%",
         locale: "en",
         colorTheme: "dark",
-        isTransparent: true,                 // uses our box's background
+        isTransparent: true,   // uses our box's background
+        width: "100%",
+        ...settings,
+      });
+      container.appendChild(script);
+
+      box.appendChild(container);
+    }
+
+    // Chart with price, change and the selected period
+    function createChart(box, symbol, period) {
+      createWidget(box, "symbol-overview", {
+        symbols: [[symbol + "|" + period]],   // "EXCHANGE:TICKER|PERIOD"
+        height: "100%",
         autosize: true,
+        chartOnly: false,
         chartType: "area",
         showVolume: false,
         showMA: false,
         scalePosition: "right",
         scaleMode: "Normal",
-        valuesTracking: "1",                 // shows the value under the mouse
+        valuesTracking: "1",                  // shows the value under the mouse
         changeMode: "price-and-percent",
-        hideDateRanges: true,                // we have our own period buttons
+        hideDateRanges: true,                 // we have our own period buttons
         hideMarketStatus: false,
         hideSymbolLogo: false,
       });
-      container.appendChild(script);
-
-      box.appendChild(container);
     }
 
-    // Compact TradingView widget: just the value and the change, no chart
-    const QUOTE_URL = "https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js";
-
+    // Compact card: just the value and the change, no chart
     function createQuote(box, symbol) {
-      const container = document.createElement("div");
-      container.className = "tradingview-widget-container";
-
-      const target = document.createElement("div");
-      target.className = "tradingview-widget-container__widget";
-      container.appendChild(target);
-
-      const script = document.createElement("script");
-      script.src = QUOTE_URL;
-      script.async = true;
-      script.innerHTML = JSON.stringify({
-        symbol: symbol,
-        width: "100%",
-        isTransparent: true,
-        colorTheme: "dark",
-        locale: "en",
-      });
-      container.appendChild(script);
-
-      box.appendChild(container);
+      createWidget(box, "single-quote", { symbol: symbol });
     }
 
-    // List of assets with their change over the selected period
-    const OVERVIEW_URL = "https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js";
-
-    function createOverview(box, title, symbols, period) {
-      const container = document.createElement("div");
-      container.className = "tradingview-widget-container";
-      container.style.height = "100%";
-
-      const target = document.createElement("div");
-      target.className = "tradingview-widget-container__widget";
-      container.appendChild(target);
-
-      const script = document.createElement("script");
-      script.src = OVERVIEW_URL;
-      script.async = true;
-      script.innerHTML = JSON.stringify({
-        colorTheme: "dark",
-        dateRange: "1D",
-        showChart: false,           // just the list
-        locale: "en",
-        width: "100%",
+    // List of assets with their daily change
+    function createOverview(box, title, symbols) {
+      createWidget(box, "market-overview", {
         height: "100%",
-        isTransparent: true,
+        dateRange: "1D",
+        showChart: false,                     // just the list
         showSymbolLogo: true,
         showFloatingTooltip: false,
         tabs: [{
@@ -590,11 +556,7 @@
           symbols: symbols.map(([symbol, name]) => ({ s: symbol, d: name })),
         }],
       });
-      container.appendChild(script);
-
-      box.appendChild(container);
     }
-
 
     // 3b) NUMBER CARDS: data from public APIs
     const BCB_URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.";
@@ -1052,7 +1014,7 @@
             card.className = "card overview-card";
             card.innerHTML = `<div class="label">${title}</div><div class="chart"></div>`;
             grid.appendChild(card);
-            createOverview(card.querySelector(".chart"), title, symbols, currentPeriod);
+            createOverview(card.querySelector(".chart"), title, symbols);            
           }        
         
         } else if (group.quotes) {
